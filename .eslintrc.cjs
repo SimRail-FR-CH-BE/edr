@@ -1,32 +1,48 @@
 /* eslint-env node */
-require('@rushstack/eslint-patch/modern-module-resolution')
+require('@rushstack/eslint-patch/modern-module-resolution');
 
 module.exports = {
   root: true,
-  env: {
-    node: true,
-  },
   extends: [
-    '@vue/typescript/recommended',
-    'eslint:recommended',
     'plugin:vue/vue3-essential',
+    'eslint:recommended',
+    '@vue/eslint-config-typescript',
+    '@vue/eslint-config-prettier',
     'prettier',
   ],
   parserOptions: {
-    parser: '@typescript-eslint/parser',
     ecmaVersion: 'latest',
-    sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['prettier', 'simple-import-sort'],
   rules: {
+    'simple-import-sort/imports': [
+      'error',
+      {
+        groups: [
+          // Side effect imports.
+          ['^\\u0000'],
+          // Packages.
+          // Things that start with a lowercase letter (or digit or underscore), or `@` followed by a letter.
+          ['^@?[a-z0-9]'],
+          // Components.
+          // Things that start with an uppercase.
+          ['^[A-Z]'],
+          // Absolute imports and other imports such as Vue-style `@/foo`.
+          // Anything that does not start with a dot.
+          ['^[^.]'],
+          // Relative imports.
+          // Anything that starts with a dot.
+          ['^\\.'],
+        ],
+      },
+    ],
     'no-console': [
-      process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+      'warn',
       {
         allow: ['error'],
       },
     ],
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
     'vue/no-v-html': 'off',
     'prettier/prettier': [
       1,
@@ -34,11 +50,9 @@ module.exports = {
         singleQuote: true,
         semi: true,
         trailingComma: 'all',
+        endOfLine: 'auto',
       },
     ],
-    '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
     semi: 'error',
     quotes: ['error', 'single'],
     'no-var': 'error',
